@@ -75,5 +75,13 @@ jobs:
       run: |
           docker push parasbhardwaj666/boardgame:${{ github.run_number }}
 
+    - name: Kubectl Action
+      uses: tale/kubectl-action@v1
+      with:
+        base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+    - run: |
+        kubeclt apply -f deployment.yaml -n webapps
+        kubectl get svc -n webapps
+
 
 
