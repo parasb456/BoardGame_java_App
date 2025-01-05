@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -24,15 +24,23 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    # - name: Trivy FS scan
-    #   run: |
-    #     trivy fs --format table -o fs.html .
+    - uses: actions/upload-artifact@v4
+      with:
+        name: BoardGame
+        path: target/*.jar
+
+    - name: Trivy FS scan
+      run: |
+        trivy fs --format table -o fs.html .
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    
+    - name: Install jq
+      run: sudo apt-get update && sudo apt-get install -y jq
 
     - name: SonarQube Quality Gate check
       id: sonarqube-quality-gate-check
