@@ -80,7 +80,7 @@ jobs:
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG }}
     - run: |
-        kubeclt apply -f deployment.yaml -n webapps
+        kubectl apply -f deployment.yaml -n webapps
         kubectl get svc -n webapps
 
 
